@@ -5,7 +5,7 @@ services:
     build:
       context: nginx
       dockerfile: Dockerfile
-    image: soldout.azurecr.io/web
+    image: acrsoldout.azurecr.io/web
     ports:
       - "80:80"
     volumes:
@@ -16,7 +16,7 @@ services:
     build:
       context: php
       dockerfile: Dockerfile
-    image: soldout.azurecr.io/php
+    image: acrsoldout.azurecr.io/php
     volumes:
       - ./source:/source
       - ./php/www.conf:/usr/local/etc/php-fpm.d/www.conf
