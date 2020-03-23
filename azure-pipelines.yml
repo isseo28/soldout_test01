@@ -1,0 +1,39 @@
+# Docker
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- master
+
+resources:
+- repo: self
+
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: '51a1f6cc-7ea7-4d0c-b0cf-9aa1dc00a0ce'
+  imageRepository: 'isseosoldouttest'
+  containerRegistry: 'acrsoldout.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/docker-compose.yml'
+  tag: '$(Build.BuildId)'
+  
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:  
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: DockerCompose@0
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerComposeFile: '$(Build.SourcesDirectory)/docker-compose.yml'
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
